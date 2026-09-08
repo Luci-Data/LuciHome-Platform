@@ -1,0 +1,78 @@
+/* ==========================================================================
+   LuciHome — Public homepage
+   Extends workspace.css. Reuses its tokens (--accent, --bg-surface, etc.)
+   and its existing card / button / form / modal classes so the whole site
+   stays visually consistent as we add more pages.
+   ========================================================================== */
+
+body{ padding-top:var(--topbar-h); }
+
+/* Public topbar: same look as the app topbar, but with auth buttons
+   instead of the search box / avatar (visitor isn't logged in yet). */
+.public-topbar .topbar-brand{ width:auto; }
+.public-auth-actions{ display:flex; align-items:center; gap:10px; margin-left:auto; }
+
+/* ---- Hero + search ---- */
+.hero{
+  background:linear-gradient(180deg, var(--accent-tint) 0%, var(--bg-canvas) 65%);
+  padding:64px 20px 40px;
+  text-align:center;
+}
+.hero-inner{ max-width:760px; margin:0 auto; }
+.hero h1{
+  font-family:var(--font-display); font-weight:500; letter-spacing:0;
+  font-size:var(--text-3xl); color:var(--text-primary); margin:0 0 12px;
+}
+.hero p.lead{
+  font-size:var(--text-lg); color:var(--text-secondary); margin:0 0 32px; line-height:1.5;
+}
+
+.search-card{
+  max-width:920px; margin:0 auto; text-align:left;
+  background:var(--bg-surface); border:1px solid var(--border); border-radius:16px;
+  box-shadow:var(--shadow-2); padding:8px 20px 20px;
+}
+.search-tabs{ display:flex; gap:4px; border-bottom:1px solid var(--border); margin-bottom:18px; }
+.search-tab{
+  background:none; border:none; padding:14px 18px 12px; font-size:14px; font-weight:500;
+  color:var(--text-secondary); cursor:pointer; position:relative;
+}
+.search-tab::after{ content:''; position:absolute; left:18px; right:18px; bottom:-1px; height:2px; background:transparent; }
+.search-tab.active{ color:var(--accent); }
+.search-tab.active::after{ background:var(--accent); }
+
+.search-fields{ display:grid; grid-template-columns:1.2fr 1fr 1fr auto; gap:12px; align-items:end; }
+.search-fields .field{ margin-bottom:0; }
+.search-fields .btn-primary{ height:42px; justify-content:center; padding:0 26px; white-space:nowrap; }
+@media (max-width:900px){
+  .search-fields{ grid-template-columns:1fr 1fr; }
+  .search-fields .btn-primary{ grid-column:1 / -1; }
+}
+@media (max-width:560px){
+  .search-fields{ grid-template-columns:1fr; }
+  .hero{ padding:44px 16px 32px; }
+  .hero h1{ font-size:var(--text-2xl); }
+}
+
+/* ---- "how it works" section ---- */
+.section-wrap{ max-width:var(--content-max); margin:0 auto; padding:56px 24px; }
+.section-heading{ text-align:center; margin-bottom:36px; }
+.section-heading h2{ font-family:var(--font-display); font-weight:500; font-size:var(--text-2xl); margin:0 0 8px; color:var(--text-primary); }
+.section-heading p{ color:var(--text-secondary); margin:0; }
+.feature-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+@media (max-width:800px){ .feature-grid{ grid-template-columns:1fr; } }
+
+/* ---- footer ---- */
+.site-footer{
+  border-top:1px solid var(--border); background:var(--bg-surface);
+  padding:28px 24px; text-align:center; color:var(--text-muted); font-size:12.5px;
+}
+.site-footer strong{ color:var(--text-secondary); }
+
+/* ---- shared auth-modal bits ---- */
+.auth-switch{ text-align:center; font-size:13px; color:var(--text-secondary); margin-top:4px; }
+.auth-switch a{ font-weight:500; cursor:pointer; }
+.phone-row{ display:flex; gap:10px; align-items:center; }
+.phone-row .input{ flex:1; }
+.visibility-toggle{ display:flex; align-items:center; gap:10px; margin-top:8px; }
+.visibility-toggle span{ font-size:12.5px; color:var(--text-secondary); }

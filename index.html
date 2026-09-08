@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LuciHome — Real estate across 50+ countries</title>
+<meta name="description" content="Search and list properties for sale or rent across 50+ countries, with zero commission.">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="workspace.css">
+<link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+<!-- ============ TOPBAR (public / logged-out) ============ -->
+<header class="topbar public-topbar">
+  <div class="topbar-brand">
+    <div class="mark">L</div>
+    <div class="wordmark">LuciHome</div>
+  </div>
+  <div class="public-auth-actions">
+    <button class="btn-secondary" id="btnOpenLogin">Log in</button>
+    <button class="btn-primary" id="btnOpenRegister">Create account</button>
+  </div>
+</header>
+
+<!-- ============ HERO + SEARCH ============ -->
+<section class="hero">
+  <div class="hero-inner">
+    <h1>Find your next property, anywhere in the world</h1>
+    <p class="lead">Search verified listings for sale and rent across 50+ countries — zero commission.</p>
+  </div>
+
+  <div class="search-card">
+    <div class="search-tabs">
+      <button class="search-tab active" data-mode="sale">For sale</button>
+      <button class="search-tab" data-mode="rent">For rent</button>
+    </div>
+    <form class="search-fields" id="searchForm">
+      <div class="field">
+        <label class="field-label" for="fCountry">Country</label>
+        <select class="select" id="fCountry" required>
+          <option value="" disabled selected>Select a country</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" for="fCity">City (optional)</label>
+        <input class="input" id="fCity" type="text" placeholder="e.g. Bucharest">
+      </div>
+      <div class="field">
+        <label class="field-label" for="fType">Property type</label>
+        <select class="select" id="fType">
+          <option value="">Any type</option>
+          <option value="house">House</option>
+          <option value="villa">Villa</option>
+          <option value="apartment">Apartment</option>
+        </select>
+      </div>
+      <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
+    </form>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="section-wrap">
+  <div class="section-heading">
+    <h2>How LuciHome works</h2>
+    <p>Built for buyers, sellers and agents alike — no commission, no middlemen.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="card">
+      <i class="fa-solid fa-earth-europe mi"></i>
+      <p class="mt">Search across 50+ countries</p>
+      <p class="ms">One search, one platform. Browse verified listings from private sellers and professionals worldwide.</p>
+    </div>
+    <div class="card">
+      <i class="fa-solid fa-house-circle-check mi"></i>
+      <p class="mt">List for free, zero commission</p>
+      <p class="ms">Create a free account and publish your property in minutes — with photos, description and price.</p>
+    </div>
+    <div class="card">
+      <i class="fa-solid fa-comments mi"></i>
+      <p class="mt">Chat directly, privately</p>
+      <p class="ms">Message buyers or sellers one-to-one, in a private conversation only the two of you can see.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <strong>LuciHome</strong> — real estate, everywhere. &copy; <span id="year"></span> LuciHome. All rights reserved.
+</footer>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Log in</h3>
+      <button class="modal-close" data-close-modal>&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="note-box">Login isn't wired up yet — we're connecting it to the real account system in the next stage. This is a preview of the form.</div>
+      <form id="loginForm">
+        <div class="field">
+          <label class="field-label" for="loginEmail">Email address</label>
+          <input class="input" id="loginEmail" type="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label class="field-label" for="loginPassword">Password</label>
+          <input class="input" id="loginPassword" type="password" placeholder="••••••••" required>
+        </div>
+      </form>
+      <p class="auth-switch">Don't have an account? <a id="switchToRegister">Create one</a></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" data-close-modal>Cancel</button>
+      <button class="btn-primary" id="loginSubmit">Log in</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REGISTER MODAL ============ -->
+<div class="modal-overlay" id="registerModal">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h3>Create your account</h3>
+      <button class="modal-close" data-close-modal>&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="note-box">This form isn't connected to the database yet — that's the next stage. For now it shows every field we agreed on.</div>
+      <form id="registerForm">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="regFirstName">First name</label>
+            <input class="input" id="regFirstName" type="text" required>
+          </div>
+          <div class="field">
+            <label class="field-label" for="regLastName">Last name</label>
+            <input class="input" id="regLastName" type="text" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="regEmail">Email address</label>
+          <input class="input" id="regEmail" type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="regPassword">Password</label>
+            <input class="input" id="regPassword" type="password" placeholder="••••••••" required>
+          </div>
+          <div class="field">
+            <label class="field-label" for="regPasswordConfirm">Confirm password</label>
+            <input class="input" id="regPasswordConfirm" type="password" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="regBirthDate">Date of birth</label>
+            <input class="input" id="regBirthDate" type="date" required>
+            <p class="field-hint">You must be at least 18 years old to create an account.</p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="regGender">Gender</label>
+            <select class="select" id="regGender" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="unspecified">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="regCountry">Country</label>
+            <select class="select" id="regCountry" required>
+              <option value="" disabled selected>Select a country</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="regCity">City</label>
+            <input class="input" id="regCity" type="text" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="regPhone">Phone number</label>
+          <div class="phone-row">
+            <input class="input" id="regPhone" type="tel" placeholder="+40 7xx xxx xxx" required>
+          </div>
+          <div class="visibility-toggle">
+            <label class="switch">
+              <input type="checkbox" id="regPhoneVisible">
+              <span class="track"></span>
+            </label>
+            <span>Show my phone number on my public listings</span>
+          </div>
+        </div>
+
+        <div class="chk-row">
+          <input type="checkbox" id="regTerms" required>
+          <label for="regTerms">I agree to the Terms of Service and Privacy Policy</label>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" data-close-modal>Cancel</button>
+      <button class="btn-primary" id="registerSubmit">Create account</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<script src="countries.js"></script>
+<script src="home.js"></script>
+</body>
+</html>
