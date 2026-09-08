@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
   fillCountryDropdowns();
   setupSearchTabs();
   setupModals();
-  setupPlaceholderForms();
+  setupSearchForm();
   document.getElementById('year').textContent = new Date().getFullYear();
 });
 
@@ -69,30 +69,9 @@ function setupModals() {
 function openModal(modal) { modal.classList.add('open'); }
 function closeModal(modal) { modal.classList.remove('open'); }
 
-// Stage 1 placeholders: validate what we can on the screen, then show a
-// toast explaining that real account creation/login arrives next stage.
-function setupPlaceholderForms() {
-  document.getElementById('registerSubmit').addEventListener('click', () => {
-    const form = document.getElementById('registerForm');
-    if (!form.reportValidity()) return;
-
-    if (!isAtLeast18(document.getElementById('regBirthDate').value)) {
-      showToast('You must be at least 18 years old to create an account.', 'danger');
-      return;
-    }
-    if (document.getElementById('regPassword').value !== document.getElementById('regPasswordConfirm').value) {
-      showToast('Passwords do not match.', 'danger');
-      return;
-    }
-    showToast('Looks good! Account creation will be connected in the next stage.', 'success');
-  });
-
-  document.getElementById('loginSubmit').addEventListener('click', () => {
-    const form = document.getElementById('loginForm');
-    if (!form.reportValidity()) return;
-    showToast('Login will be connected to real accounts in the next stage.', 'success');
-  });
-
+// The property search itself (results page) is a later stage — for now
+// we just confirm the click so the button doesn't feel dead.
+function setupSearchForm() {
   document.getElementById('searchForm').addEventListener('submit', (e) => {
     e.preventDefault();
     showToast('Search results page is coming in a later stage.', 'success');
