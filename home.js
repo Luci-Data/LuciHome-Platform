@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Fill every <select> that should list countries (search box + register form)
 function fillCountryDropdowns() {
-  const selects = document.querySelectorAll('#fCountry, #regCountry');
+  const selects = document.querySelectorAll('#fCountry, #regCountry, #profCountry');
   selects.forEach((select) => {
     LUCIHOME_COUNTRIES.forEach((country) => {
       const option = document.createElement('option');
@@ -72,7 +72,9 @@ function closeModal(modal) { modal.classList.remove('open'); }
 // The property search itself (results page) is a later stage — for now
 // we just confirm the click so the button doesn't feel dead.
 function setupSearchForm() {
-  document.getElementById('searchForm').addEventListener('submit', (e) => {
+  const searchForm = document.getElementById('searchForm');
+  if (!searchForm) return; // this page (e.g. profile.html) has no search bar
+  searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
     showToast('Search results page is coming in a later stage.', 'success');
   });

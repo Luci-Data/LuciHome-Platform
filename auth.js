@@ -22,6 +22,9 @@ function setupAuthActions() {
   document.getElementById('registerSubmit').addEventListener('click', handleRegister);
   document.getElementById('loginSubmit').addEventListener('click', handleLogin);
   document.getElementById('btnLogout').addEventListener('click', handleLogout);
+  document.getElementById('btnMyProfile').addEventListener('click', () => {
+    window.location.href = 'profile.html';
+  });
 
   const avatar = document.getElementById('userAvatar');
   const dropdown = document.getElementById('userDropdown');
@@ -55,7 +58,7 @@ async function renderAuthState(session) {
 
   const { data: profile } = await supabaseClient
     .from('profiles')
-    .select('first_name,last_name')
+    .select('first_name,last_name,avatar_url')
     .eq('id', session.user.id)
     .single();
 
@@ -64,7 +67,17 @@ async function renderAuthState(session) {
 
   document.getElementById('userDisplayName').textContent = displayName;
   document.getElementById('userEmail').textContent = session.user.email;
-  document.getElementById('userAvatar').textContent = initial;
+
+  const avatarEl = document.getElementById('userAvatar');
+  if (profile?.avatar_url) {
+    avatarEl.textContent = '';
+    avatarEl.style.backgroundImage = `url("${profile.avatar_url}")`;
+    avatarEl.style.backgroundSize = 'cover';
+    avatarEl.style.backgroundPosition = 'center';
+  } else {
+    avatarEl.style.backgroundImage = 'none';
+    avatarEl.textContent = initial;
+  }
 }
 
 async function handleRegister() {

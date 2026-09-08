@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LuciHome — Real estate across 50+ countries</title>
-<meta name="description" content="Search and list properties for sale or rent across 50+ countries, with zero commission.">
+<title>My profile — LuciHome</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -15,11 +14,14 @@
 </head>
 <body>
 
-<!-- ============ TOPBAR (public / logged-out) ============ -->
+<!-- ============ TOPBAR — identical block to index.html, so the header
+     behaves the same on every page (this stays in sync with index.html) ============ -->
 <header class="topbar public-topbar">
   <div class="topbar-brand">
-    <div class="mark">L</div>
-    <div class="wordmark">LuciHome</div>
+    <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+      <div class="mark">L</div>
+      <div class="wordmark">LuciHome</div>
+    </a>
   </div>
   <div class="public-auth-actions" id="authButtons">
     <button class="btn-secondary" id="btnOpenLogin">Log in</button>
@@ -39,73 +41,93 @@
   </div>
 </header>
 
-<!-- ============ HERO + SEARCH ============ -->
-<section class="hero">
-  <div class="hero-inner">
-    <h1>Find your next property, anywhere in the world</h1>
-    <p class="lead">Search verified listings for sale and rent across 50+ countries — zero commission.</p>
+<main class="section-wrap" style="max-width:760px">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">My profile</h1>
+      <p class="page-sub">Update your photo and contact details. Your email is used to log in and isn't shown publicly.</p>
+    </div>
   </div>
 
-  <div class="search-card">
-    <div class="search-tabs">
-      <button class="search-tab active" data-mode="sale">For sale</button>
-      <button class="search-tab" data-mode="rent">For rent</button>
+  <!-- Shown only while we haven't confirmed the person is logged in yet -->
+  <div class="empty-state" id="profileLoading">
+    <i class="fa-solid fa-circle-notch fa-spin"></i>
+    <p>Loading your profile…</p>
+  </div>
+
+  <!-- Shown if there's no active session -->
+  <div class="card" id="profileSignedOut" style="display:none;text-align:center">
+    <p class="mt">You need to be logged in to view this page.</p>
+    <p class="ms">Use the Log in button at the top of the page, then come back here.</p>
+  </div>
+
+  <form class="card" id="profileForm" style="display:none">
+    <!-- Avatar -->
+    <div class="flex flex-gap" style="align-items:center;margin-bottom:24px">
+      <div class="avatar-circle lg" id="avatarPreview">?</div>
+      <div>
+        <button type="button" class="btn-secondary btn-sm" id="btnChangePhoto">Change photo</button>
+        <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp" style="display:none">
+        <p class="field-hint" style="margin-top:8px">JPG, PNG or WebP. Square images look best.</p>
+      </div>
     </div>
-    <form class="search-fields" id="searchForm">
+
+    <hr class="rule">
+
+    <div class="field">
+      <label class="field-label">Email address</label>
+      <input class="input" id="profEmail" type="email" disabled>
+      <p class="field-hint">Changing your email will be available in a later update.</p>
+    </div>
+
+    <div class="field-row">
       <div class="field">
-        <label class="field-label" for="fCountry">Country</label>
-        <select class="select" id="fCountry" required>
-          <option value="" disabled selected>Select a country</option>
+        <label class="field-label" for="profFirstName">First name</label>
+        <input class="input" id="profFirstName" type="text" required>
+      </div>
+      <div class="field">
+        <label class="field-label" for="profLastName">Last name</label>
+        <input class="input" id="profLastName" type="text" required>
+      </div>
+    </div>
+
+    <div class="field-row">
+      <div class="field">
+        <label class="field-label" for="profCountry">Country</label>
+        <select class="select" id="profCountry" required>
+          <option value="" disabled>Select a country</option>
         </select>
       </div>
       <div class="field">
-        <label class="field-label" for="fCity">City (optional)</label>
-        <input class="input" id="fCity" type="text" placeholder="e.g. Bucharest">
+        <label class="field-label" for="profCity">City</label>
+        <input class="input" id="profCity" type="text" required>
       </div>
-      <div class="field">
-        <label class="field-label" for="fType">Property type</label>
-        <select class="select" id="fType">
-          <option value="">Any type</option>
-          <option value="house">House</option>
-          <option value="villa">Villa</option>
-          <option value="apartment">Apartment</option>
-        </select>
+    </div>
+
+    <div class="field">
+      <label class="field-label" for="profPhone">Phone number</label>
+      <div class="phone-row">
+        <input class="input" id="profPhone" type="tel" placeholder="+40 7xx xxx xxx">
       </div>
-      <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
-    </form>
-  </div>
-</section>
-
-<!-- ============ HOW IT WORKS ============ -->
-<section class="section-wrap">
-  <div class="section-heading">
-    <h2>How LuciHome works</h2>
-    <p>Built for buyers, sellers and agents alike — no commission, no middlemen.</p>
-  </div>
-  <div class="feature-grid">
-    <div class="card">
-      <i class="fa-solid fa-earth-europe mi"></i>
-      <p class="mt">Search across 50+ countries</p>
-      <p class="ms">One search, one platform. Browse verified listings from private sellers and professionals worldwide.</p>
+      <div class="visibility-toggle">
+        <label class="switch">
+          <input type="checkbox" id="profPhoneVisible">
+          <span class="track"></span>
+        </label>
+        <span>Show my phone number on my public listings</span>
+      </div>
     </div>
-    <div class="card">
-      <i class="fa-solid fa-house-circle-check mi"></i>
-      <p class="mt">List for free, zero commission</p>
-      <p class="ms">Create a free account and publish your property in minutes — with photos, description and price.</p>
-    </div>
-    <div class="card">
-      <i class="fa-solid fa-comments mi"></i>
-      <p class="mt">Chat directly, privately</p>
-      <p class="ms">Message buyers or sellers one-to-one, in a private conversation only the two of you can see.</p>
-    </div>
-  </div>
-</section>
 
-<footer class="site-footer">
-  <strong>LuciHome</strong> — real estate, everywhere. &copy; <span id="year"></span> LuciHome. All rights reserved.
-</footer>
+    <div class="page-actions" style="margin-top:20px">
+      <button type="submit" class="btn-primary" id="profileSave">Save changes</button>
+    </div>
+  </form>
+</main>
 
-<!-- ============ LOGIN MODAL ============ -->
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- ============ LOGIN / REGISTER MODALS — same as index.html, kept here too
+     in case the session expires while on this page ============ -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal">
     <div class="modal-head">
@@ -132,7 +154,6 @@
   </div>
 </div>
 
-<!-- ============ REGISTER MODAL ============ -->
 <div class="modal-overlay" id="registerModal">
   <div class="modal wide">
     <div class="modal-head">
@@ -225,12 +246,11 @@
   </div>
 </div>
 
-<div class="toast-stack" id="toastStack"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="countries.js"></script>
 <script src="supabase-client.js"></script>
 <script src="home.js"></script>
 <script src="auth.js"></script>
+<script src="profile.js"></script>
 </body>
 </html>
