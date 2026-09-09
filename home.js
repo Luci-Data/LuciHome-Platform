@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Fill every <select> that should list countries (search box + register form)
 function fillCountryDropdowns() {
-  const selects = document.querySelectorAll('#fCountry, #regCountry, #profCountry');
+  const selects = document.querySelectorAll('#fCountry, #regCountry, #profCountry, #listCountry');
   selects.forEach((select) => {
     LUCIHOME_COUNTRIES.forEach((country) => {
       const option = document.createElement('option');

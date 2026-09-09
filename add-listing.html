@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add listing — LuciHome</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+<link rel="stylesheet" href="workspace.css">
+<link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="listing.css">
+</head>
+<body>
+
+<!-- ============ TOPBAR — identical block to index.html/profile.html ============ -->
+<header class="topbar public-topbar">
+  <div class="topbar-brand">
+    <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+      <div class="mark">L</div>
+      <div class="wordmark">LuciHome</div>
+    </a>
+  </div>
+  <div class="public-auth-actions" id="authButtons">
+    <button class="btn-secondary" id="btnAddListing"><i class="fa-solid fa-plus"></i> Add listing</button>
+    <button class="btn-secondary" id="btnOpenLogin">Log in</button>
+    <button class="btn-primary" id="btnOpenRegister">Create account</button>
+  </div>
+  <div class="dropdown public-auth-actions" id="userMenu" style="display:none">
+    <button class="btn-secondary" id="btnAddListingLoggedIn"><i class="fa-solid fa-plus"></i> Add listing</button>
+    <div class="topbar-avatar" id="userAvatar" tabindex="0">?</div>
+    <div class="dropdown-panel" id="userDropdown">
+      <div class="dropdown-header">
+        <strong id="userDisplayName">—</strong>
+        <span id="userEmail"></span>
+      </div>
+      <div class="dropdown-sep"></div>
+      <div class="dropdown-item" id="btnMyProfile"><i class="fa-solid fa-user"></i> My profile</div>
+      <div class="dropdown-item danger" id="btnLogout"><i class="fa-solid fa-right-from-bracket"></i> Log out</div>
+    </div>
+  </div>
+</header>
+
+<main class="section-wrap" style="max-width:820px">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Add a new listing</h1>
+      <p class="page-sub">Fill in the details below — the more complete your listing, the more trust it builds with buyers and renters.</p>
+    </div>
+  </div>
+
+  <!-- Shown only while we haven't confirmed the person is logged in yet -->
+  <div class="empty-state" id="listingLoading">
+    <i class="fa-solid fa-circle-notch fa-spin"></i>
+    <p>Checking your account…</p>
+  </div>
+
+  <!-- Shown if there's no active session -->
+  <div class="card" id="listingSignedOut" style="display:none;text-align:center">
+    <i class="fa-solid fa-lock mi" style="margin:0 auto 8px"></i>
+    <p class="mt">You need an account to publish a listing</p>
+    <p class="ms">Use the Create account button at the top of the page — it only takes a minute.</p>
+  </div>
+
+  <form id="listingForm" style="display:none">
+
+    <!-- 1. Listing type & property type -->
+    <div class="form-section">
+      <div class="form-section-head">
+        <div class="form-section-num">1</div>
+        <div>
+          <h2>What are you listing?</h2>
+          <p>Choose whether it's for sale or rent, and the property type.</p>
+        </div>
+      </div>
+
+      <label class="field-label">Listing type</label>
+      <div class="type-toggle" id="listingTypeToggle" style="margin-bottom:18px">
+        <button type="button" class="type-toggle-btn active" data-value="sale"><i class="fa-solid fa-tag"></i> For sale</button>
+        <button type="button" class="type-toggle-btn" data-value="rent"><i class="fa-solid fa-key"></i> For rent</button>
+      </div>
+
+      <label class="field-label">Property type</label>
+      <div class="type-toggle" id="propertyTypeToggle">
+        <button type="button" class="type-toggle-btn active" data-value="house"><i class="fa-solid fa-house"></i> House</button>
+        <button type="button" class="type-toggle-btn" data-value="villa"><i class="fa-solid fa-hotel"></i> Villa</button>
+        <button type="button" class="type-toggle-btn" data-value="apartment"><i class="fa-solid fa-building"></i> Apartment</button>
+      </div>
+    </div>
+
+    <!-- 2. Basic info -->
+    <div class="form-section">
+      <div class="form-section-head">
+        <div class="form-section-num">2</div>
+        <div>
+          <h2>Basic information</h2>
+          <p>A clear title and a good description make your listing stand out.</p>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="listTitle">Title</label>
+        <input class="input" id="listTitle" type="text" maxlength="80" placeholder="e.g. Bright 3-room apartment near the park" required>
+        <div class="char-counter"><span id="titleCount">0</span>/80</div>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="listDescription">Description</label>
+        <textarea class="textarea" id="listDescription" rows="6" maxlength="2000" placeholder="Describe the property: layout, condition, what's nearby, why it's a great place to live…" required></textarea>
+        <div class="char-counter"><span id="descCount">0</span>/2000</div>
+      </div>
+    </div>
+
+    <!-- 3. Location -->
+    <div class="form-section">
+      <div class="form-section-head">
+        <div class="form-section-num">3</div>
+        <div>
+          <h2>Location</h2>
+          <p>Where is the property? The exact address is only shown to serious inquiries later — for now, the zone is enough.</p>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="listCountry">Country</label>
+          <select class="select" id="listCountry" required>
+            <option value="" disabled selected>Select a country</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="field-label" for="listCity">City</label>
+          <input class="input" id="listCity" type="text" required>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="listNeighborhood">Neighborhood / zone</label>
+          <input class="input" id="listNeighborhood" type="text" placeholder="e.g. Herăstrău">
+        </div>
+        <div class="field">
+          <label class="field-label" for="listAddress">Full address <span style="font-weight:400;color:var(--text-muted)">(optional)</span></label>
+          <input class="input" id="listAddress" type="text" placeholder="Street and number">
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Price & details -->
+    <div class="form-section">
+      <div class="form-section-head">
+        <div class="form-section-num">4</div>
+        <div>
+          <h2>Price & details</h2>
+          <p>The essentials buyers filter by first.</p>
+        </div>
+      </div>
+
+      <div class="field price-row">
+        <div class="field">
+          <label class="field-label" for="listPrice">Price</label>
+          <input class="input" id="listPrice" type="number" min="0" step="1" placeholder="0" required>
+        </div>
+        <div class="field">
+          <label class="field-label" for="listCurrency">Currency</label>
+          <select class="select" id="listCurrency">
+            <option value="EUR" selected>EUR</option>
+            <option value="USD">USD</option>
+            <option value="GBP">GBP</option>
+            <option value="RON">RON</option>
+            <option value="CHF">CHF</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label class="field-label" for="listBedrooms">Bedrooms</label>
+          <input class="input" id="listBedrooms" type="number" min="0" step="1" placeholder="e.g. 3">
+        </div>
+        <div class="field">
+          <label class="field-label" for="listBathrooms">Bathrooms</label>
+          <input class="input" id="listBathrooms" type="number" min="0" step="1" placeholder="e.g. 2">
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label" for="listArea">Living area (m²)</label>
+        <input class="input" id="listArea" type="number" min="0" step="1" placeholder="e.g. 85">
+      </div>
+    </div>
+
+    <!-- 5. Features -->
+    <div class="form-section">
+      <div class="form-section-head">
+        <div class="form-section-num">5</div>
+        <div>
+          <h2>Features</h2>
+          <p>Select everything that applies.</p>
+        </div>
+      </div>
+
+      <div class="feature-grid">
+        <label class="feature-chk"><input type="checkbox" value="parking"><i class="fa-solid fa-square-parking"></i> Parking</label>
+        <label class="feature-chk"><input type="checkbox" value="garage"><i class="fa-solid fa-warehouse"></i> Garage</label>
+        <label class="feature-chk"><input type="checkbox" value="garden"><i class="fa-solid fa-seedling"></i> Garden</label>
+        <label class="feature-chk"><input type="checkbox" value="balcony"><i class="fa-solid fa-border-all"></i> Balcony/Terrace</label>
+        <label class="feature-chk"><input type="checkbox" value="elevator"><i class="fa-solid fa-elevator"></i> Elevator</label>
+        <label class="feature-chk"><input type="checkbox" value="air_conditioning"><i class="fa-solid fa-wind"></i> Air conditioning</label>
+        <label class="feature-chk"><input type="checkbox" value="furnished"><i class="fa-solid fa-couch"></i> Furnished</label>
+        <label class="feature-chk"><input type="checkbox" value="pool"><i class="fa-solid fa-water-ladder"></i> Swimming pool</label>
+      </div>
+    </div>
+
+    <!-- 6. Photos -->
+    <div class="form-section">
+      <div class="form-section-head">
+        <div class="form-section-num">6</div>
+        <div>
+          <h2>Photos</h2>
+          <p>Up to 12 photos. The first one becomes the cover photo — drag isn't needed, just remove and re-add in the order you want.</p>
+        </div>
+      </div>
+
+      <div class="dropzone" id="dropzone">
+        <i class="fa-solid fa-cloud-arrow-up"></i>
+        <strong>Click to upload photos</strong> or drag and drop here
+        <div class="dz-sub">JPG, PNG or WebP — up to 12 photos, 8MB each</div>
+        <input type="file" id="photoInput" accept="image/png,image/jpeg,image/webp" multiple style="display:none">
+      </div>
+
+      <div class="photo-grid" id="photoGrid"></div>
+    </div>
+
+    <div class="page-actions">
+      <button type="button" class="btn-secondary" id="btnCancelListing">Cancel</button>
+      <button type="submit" class="btn-primary" id="btnPublishListing"><i class="fa-solid fa-paper-plane"></i> Publish listing</button>
+    </div>
+  </form>
+</main>
+
+<div class="toast-stack" id="toastStack"></div>
+
+<!-- ============ LOGIN / REGISTER MODALS — same as other pages ============ -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Log in</h3>
+      <button class="modal-close" data-close-modal>&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="loginForm">
+        <div class="field">
+          <label class="field-label" for="loginEmail">Email address</label>
+          <input class="input" id="loginEmail" type="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label class="field-label" for="loginPassword">Password</label>
+          <input class="input" id="loginPassword" type="password" placeholder="••••••••" required>
+        </div>
+      </form>
+      <p class="auth-switch">Don't have an account? <a id="switchToRegister">Create one</a></p>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" data-close-modal>Cancel</button>
+      <button class="btn-primary" id="loginSubmit">Log in</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="registerModal">
+  <div class="modal wide">
+    <div class="modal-head">
+      <h3>Create your account</h3>
+      <button class="modal-close" data-close-modal>&times;</button>
+    </div>
+    <div class="modal-body">
+      <form id="registerForm">
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="regFirstName">First name</label>
+            <input class="input" id="regFirstName" type="text" required>
+          </div>
+          <div class="field">
+            <label class="field-label" for="regLastName">Last name</label>
+            <input class="input" id="regLastName" type="text" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="regEmail">Email address</label>
+          <input class="input" id="regEmail" type="email" placeholder="you@example.com" required>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="regPassword">Password</label>
+            <input class="input" id="regPassword" type="password" placeholder="••••••••" required>
+          </div>
+          <div class="field">
+            <label class="field-label" for="regPasswordConfirm">Confirm password</label>
+            <input class="input" id="regPasswordConfirm" type="password" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="regBirthDate">Date of birth</label>
+            <input class="input" id="regBirthDate" type="date" required>
+            <p class="field-hint">You must be at least 18 years old to create an account.</p>
+          </div>
+          <div class="field">
+            <label class="field-label" for="regGender">Gender</label>
+            <select class="select" id="regGender" required>
+              <option value="" disabled selected>Select an option</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="unspecified">Prefer not to say</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field">
+            <label class="field-label" for="regCountry">Country</label>
+            <select class="select" id="regCountry" required>
+              <option value="" disabled selected>Select a country</option>
+            </select>
+          </div>
+          <div class="field">
+            <label class="field-label" for="regCity">City</label>
+            <input class="input" id="regCity" type="text" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="regPhone">Phone number</label>
+          <div class="phone-row">
+            <input class="input" id="regPhone" type="tel" placeholder="+40 7xx xxx xxx" required>
+          </div>
+          <div class="visibility-toggle">
+            <label class="switch">
+              <input type="checkbox" id="regPhoneVisible">
+              <span class="track"></span>
+            </label>
+            <span>Show my phone number on my public listings</span>
+          </div>
+        </div>
+
+        <div class="chk-row">
+          <input type="checkbox" id="regTerms" required>
+          <label for="regTerms">I agree to the Terms of Service and Privacy Policy</label>
+        </div>
+      </form>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-secondary" data-close-modal>Cancel</button>
+      <button class="btn-primary" id="registerSubmit">Create account</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="countries.js"></script>
+<script src="supabase-client.js"></script>
+<script src="home.js"></script>
+<script src="auth.js"></script>
+<script src="add-listing.js"></script>
+</body>
+</html>

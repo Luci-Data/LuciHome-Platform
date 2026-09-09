@@ -26,6 +26,15 @@ function setupAuthActions() {
     window.location.href = 'profile.html';
   });
 
+  // "Add listing" behaves differently depending on whether you're logged in.
+  document.getElementById('btnAddListing').addEventListener('click', () => {
+    showToast('Create an account (or log in) to publish a listing.', 'danger');
+    openModal(document.getElementById('registerModal'));
+  });
+  document.getElementById('btnAddListingLoggedIn').addEventListener('click', () => {
+    window.location.href = 'add-listing.html';
+  });
+
   const avatar = document.getElementById('userAvatar');
   const dropdown = document.getElementById('userDropdown');
   avatar.addEventListener('click', () => dropdown.classList.toggle('open'));
