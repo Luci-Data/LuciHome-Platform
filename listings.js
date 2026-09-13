@@ -1,14 +1,15 @@
 // ==========================================================================
-// LuciHome — browse / search results (Stage 6)
+// LuciHome — browse / search results (Stage 6, favorites added in Stage 7)
 // ==========================================================================
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   setupResultsTypeToggle();
   applyFiltersFromUrl();
   document.getElementById('filtersForm').addEventListener('submit', (e) => {
     e.preventDefault();
     runSearchFromForm();
   });
+  await loadFavoriteIds();
   runSearchFromForm();
 });
 
@@ -94,42 +95,4 @@ async function runSearch(filters) {
 
   count.textContent = `${data.length} listing${data.length === 1 ? '' : 's'} found`;
   data.forEach((listing) => grid.appendChild(renderListingCard(listing)));
-}
-
-function renderListingCard(listing) {
-  const photos = (listing.listing_photos || []).slice().sort((a, b) => a.sort_order - b.sort_order);
-  const coverUrl = photos[0]?.photo_url || '';
-
-  const card = document.createElement('div');
-  card.className = 'listing-card';
-  card.innerHTML = `
-    ${coverUrl
-      ? `<img class="listing-card-img" src="${coverUrl}" alt="${escapeHtml(listing.title)}">`
-      : `<div class="listing-card-img" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><i class="fa-solid fa-house"></i></div>`}
-    <div class="listing-card-body">
-      <span class="listing-badge">${listing.listing_type === 'rent' ? 'For rent' : 'For sale'}</span>
-      <p class="listing-card-price">${formatPrice(listing.price, listing.currency)}</p>
-      <p class="listing-card-title">${escapeHtml(listing.title)}</p>
-      <p class="listing-card-loc">${escapeHtml([listing.neighborhood, listing.city, listing.country].filter(Boolean).join(', '))}</p>
-      <div class="listing-card-meta">
-        ${listing.bedrooms != null ? `<span><i class="fa-solid fa-bed"></i> ${listing.bedrooms}</span>` : ''}
-        ${listing.bathrooms != null ? `<span><i class="fa-solid fa-bath"></i> ${listing.bathrooms}</span>` : ''}
-        ${listing.area_sqm != null ? `<span><i class="fa-solid fa-ruler-combined"></i> ${listing.area_sqm} m²</span>` : ''}
-      </div>
-    </div>
-  `;
-  card.addEventListener('click', () => {
-    window.location.href = `listing-detail.html?id=${listing.id}`;
-  });
-  return card;
-}
-
-function formatPrice(price, currency) {
-  return new Intl.NumberFormat('en-US').format(price) + ' ' + currency;
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str || '';
-  return div.innerHTML;
 }

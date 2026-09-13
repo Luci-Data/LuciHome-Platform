@@ -31,6 +31,22 @@
 .listing-card-meta{ display:flex; gap:12px; font-size:12px; color:var(--text-muted); }
 .listing-card-meta span{ display:flex; align-items:center; gap:5px; }
 
+.heart-btn{
+  position:absolute; top:10px; right:10px; width:34px; height:34px; border-radius:50%; border:none;
+  background:rgba(255,255,255,.92); color:var(--text-secondary); cursor:pointer; display:flex;
+  align-items:center; justify-content:center; font-size:15px; box-shadow:var(--shadow-1);
+}
+.heart-btn:hover{ color:var(--danger); }
+.heart-btn.active{ color:var(--danger); }
+
+.heart-btn-inline{
+  border:1px solid var(--border); background:var(--bg-surface); color:var(--text-secondary);
+  border-radius:10px; width:42px; height:42px; display:inline-flex; align-items:center; justify-content:center;
+  cursor:pointer; font-size:16px; flex:0 0 auto;
+}
+.heart-btn-inline:hover{ color:var(--danger); }
+.heart-btn-inline.active{ color:var(--danger); border-color:var(--danger-tint); background:var(--danger-tint); }
+
 /* ---- listing detail page ---- */
 .gallery-main{ width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:var(--bg-elevated); margin-bottom:10px; }
 .gallery-main img{ width:100%; height:100%; object-fit:cover; }

@@ -13,7 +13,10 @@ const FEATURE_LABELS = {
   pool: { label: 'Swimming pool', icon: 'fa-water-ladder' }
 };
 
-document.addEventListener('DOMContentLoaded', loadListing);
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadFavoriteIds();
+  await loadListing();
+});
 
 async function loadListing() {
   const listingId = new URLSearchParams(window.location.search).get('id');
@@ -43,6 +46,10 @@ async function loadListing() {
   content.style.display = 'block';
   renderListing(listing);
   loadOwner(listing.owner_id);
+
+  const heartBtn = document.getElementById('detailHeartBtn');
+  heartBtn.classList.toggle('active', favoriteIds.has(listing.id));
+  heartBtn.addEventListener('click', () => toggleFavorite(listing.id, heartBtn));
 }
 
 function renderListing(listing) {

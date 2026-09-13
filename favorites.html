@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>My profile — LuciHome</title>
+<title>My favorites — LuciHome</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -11,11 +11,10 @@
 
 <link rel="stylesheet" href="workspace.css">
 <link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="browse.css">
 </head>
 <body>
 
-<!-- ============ TOPBAR — identical block to index.html, so the header
-     behaves the same on every page (this stays in sync with index.html) ============ -->
 <header class="topbar public-topbar">
   <div class="topbar-brand">
     <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
@@ -45,93 +44,36 @@
   </div>
 </header>
 
-<main class="section-wrap" style="max-width:760px">
+<main class="section-wrap">
   <div class="page-header">
     <div>
-      <h1 class="page-title">My profile</h1>
-      <p class="page-sub">Update your photo and contact details. Your email is used to log in and isn't shown publicly.</p>
+      <h1 class="page-title">My favorites</h1>
+      <p class="page-sub">Listings you've saved for later.</p>
+    </div>
+    <div class="page-actions">
+      <a href="listings.html" class="btn-secondary"><i class="fa-solid fa-magnifying-glass"></i> Browse listings</a>
     </div>
   </div>
 
-  <!-- Shown only while we haven't confirmed the person is logged in yet -->
-  <div class="empty-state" id="profileLoading">
+  <div class="empty-state" id="favoritesLoading">
     <i class="fa-solid fa-circle-notch fa-spin"></i>
-    <p>Loading your profile…</p>
+    <p>Loading your favorites…</p>
   </div>
 
-  <!-- Shown if there's no active session -->
-  <div class="card" id="profileSignedOut" style="display:none;text-align:center">
-    <p class="mt">You need to be logged in to view this page.</p>
-    <p class="ms">Use the Log in button at the top of the page, then come back here.</p>
+  <div class="card" id="favoritesSignedOut" style="display:none;text-align:center">
+    <p class="mt">You need to be logged in to see your favorites.</p>
   </div>
 
-  <form class="card" id="profileForm" style="display:none">
-    <!-- Avatar -->
-    <div class="flex flex-gap" style="align-items:center;margin-bottom:24px">
-      <div class="avatar-circle lg" id="avatarPreview">?</div>
-      <div>
-        <button type="button" class="btn-secondary btn-sm" id="btnChangePhoto">Change photo</button>
-        <input type="file" id="avatarInput" accept="image/png,image/jpeg,image/webp" style="display:none">
-        <p class="field-hint" style="margin-top:8px">JPG, PNG or WebP. Square images look best.</p>
-      </div>
-    </div>
+  <div class="empty-state" id="favoritesEmpty" style="display:none">
+    <i class="fa-solid fa-heart-crack"></i>
+    <p>You haven't saved any favorites yet.</p>
+  </div>
 
-    <hr class="rule">
-
-    <div class="field">
-      <label class="field-label">Email address</label>
-      <input class="input" id="profEmail" type="email" disabled>
-      <p class="field-hint">Changing your email will be available in a later update.</p>
-    </div>
-
-    <div class="field-row">
-      <div class="field">
-        <label class="field-label" for="profFirstName">First name</label>
-        <input class="input" id="profFirstName" type="text" required>
-      </div>
-      <div class="field">
-        <label class="field-label" for="profLastName">Last name</label>
-        <input class="input" id="profLastName" type="text" required>
-      </div>
-    </div>
-
-    <div class="field-row">
-      <div class="field">
-        <label class="field-label" for="profCountry">Country</label>
-        <select class="select" id="profCountry" required>
-          <option value="" disabled>Select a country</option>
-        </select>
-      </div>
-      <div class="field">
-        <label class="field-label" for="profCity">City</label>
-        <input class="input" id="profCity" type="text" required>
-      </div>
-    </div>
-
-    <div class="field">
-      <label class="field-label" for="profPhone">Phone number</label>
-      <div class="phone-row">
-        <input class="input" id="profPhone" type="tel" placeholder="+40 7xx xxx xxx">
-      </div>
-      <div class="visibility-toggle">
-        <label class="switch">
-          <input type="checkbox" id="profPhoneVisible">
-          <span class="track"></span>
-        </label>
-        <span>Show my phone number on my public listings</span>
-      </div>
-    </div>
-
-    <div class="page-actions" style="margin-top:20px">
-      <button type="submit" class="btn-primary" id="profileSave">Save changes</button>
-    </div>
-  </form>
+  <div class="listing-grid" id="favoritesGrid"></div>
 </main>
 
 <div class="toast-stack" id="toastStack"></div>
 
-<!-- ============ LOGIN / REGISTER MODALS — same as index.html, kept here too
-     in case the session expires while on this page ============ -->
 <div class="modal-overlay" id="loginModal">
   <div class="modal">
     <div class="modal-head">
@@ -255,6 +197,7 @@
 <script src="supabase-client.js"></script>
 <script src="home.js"></script>
 <script src="auth.js"></script>
-<script src="profile.js"></script>
+<script src="listing-card.js"></script>
+<script src="favorites.js"></script>
 </body>
 </html>
