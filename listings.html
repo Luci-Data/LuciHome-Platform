@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LuciHome — Real estate across 50+ countries</title>
-<meta name="description" content="Search and list properties for sale or rent across 50+ countries, with zero commission.">
+<title>Browse listings — LuciHome</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -12,14 +11,16 @@
 
 <link rel="stylesheet" href="workspace.css">
 <link rel="stylesheet" href="home.css">
+<link rel="stylesheet" href="browse.css">
 </head>
 <body>
 
-<!-- ============ TOPBAR (public / logged-out) ============ -->
 <header class="topbar public-topbar">
   <div class="topbar-brand">
-    <div class="mark">L</div>
-    <div class="wordmark">LuciHome</div>
+    <a href="index.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+      <div class="mark">L</div>
+      <div class="wordmark">LuciHome</div>
+    </a>
   </div>
   <div class="public-auth-actions" id="authButtons">
     <button class="btn-secondary" id="btnAddListing"><i class="fa-solid fa-plus"></i> Add listing</button>
@@ -42,73 +43,67 @@
   </div>
 </header>
 
-<!-- ============ HERO + SEARCH ============ -->
-<section class="hero">
-  <div class="hero-inner">
-    <h1>Find your next property, anywhere in the world</h1>
-    <p class="lead">Search verified listings for sale and rent across 50+ countries — zero commission.</p>
-  </div>
-
-  <div class="search-card">
-    <div class="search-tabs">
-      <button class="search-tab active" data-mode="sale">For sale</button>
-      <button class="search-tab" data-mode="rent">For rent</button>
-    </div>
-    <form class="search-fields" id="searchForm">
-      <div class="field">
-        <label class="field-label" for="fCountry">Country</label>
-        <select class="select" id="fCountry" required>
-          <option value="" disabled selected>Select a country</option>
-        </select>
-      </div>
-      <div class="field">
-        <label class="field-label" for="fCity">City (optional)</label>
-        <input class="input" id="fCity" type="text" placeholder="e.g. Bucharest">
-      </div>
-      <div class="field">
-        <label class="field-label" for="fType">Property type</label>
-        <select class="select" id="fType">
-          <option value="">Any type</option>
-          <option value="house">House</option>
-          <option value="villa">Villa</option>
-          <option value="apartment">Apartment</option>
-        </select>
-      </div>
-      <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Search</button>
-    </form>
-  </div>
-</section>
-
-<!-- ============ HOW IT WORKS ============ -->
-<section class="section-wrap">
-  <div class="section-heading">
-    <h2>How LuciHome works</h2>
-    <p>Built for buyers, sellers and agents alike — no commission, no middlemen.</p>
-  </div>
-  <div class="feature-grid">
-    <div class="card">
-      <i class="fa-solid fa-earth-europe mi"></i>
-      <p class="mt">Search across 50+ countries</p>
-      <p class="ms">One search, one platform. Browse verified listings from private sellers and professionals worldwide.</p>
-    </div>
-    <div class="card">
-      <i class="fa-solid fa-house-circle-check mi"></i>
-      <p class="mt">List for free, zero commission</p>
-      <p class="ms">Create a free account and publish your property in minutes — with photos, description and price.</p>
-    </div>
-    <div class="card">
-      <i class="fa-solid fa-comments mi"></i>
-      <p class="mt">Chat directly, privately</p>
-      <p class="ms">Message buyers or sellers one-to-one, in a private conversation only the two of you can see.</p>
+<main class="section-wrap">
+  <div class="page-header">
+    <div>
+      <h1 class="page-title">Browse listings</h1>
+      <p class="page-sub">Search and filter properties for sale or rent.</p>
     </div>
   </div>
-</section>
 
-<footer class="site-footer">
-  <strong>LuciHome</strong> — real estate, everywhere. &copy; <span id="year"></span> LuciHome. All rights reserved.
-</footer>
+  <form class="filters-bar" id="filtersForm">
+    <div class="type-toggle" id="resultsTypeToggle" style="min-width:220px">
+      <button type="button" class="type-toggle-btn active" data-value="">Any</button>
+      <button type="button" class="type-toggle-btn" data-value="sale">For sale</button>
+      <button type="button" class="type-toggle-btn" data-value="rent">For rent</button>
+    </div>
+    <div class="field">
+      <label class="field-label" for="resCountry">Country</label>
+      <select class="select" id="resCountry">
+        <option value="">Any country</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="field-label" for="resCity">City</label>
+      <input class="input" id="resCity" type="text" placeholder="Any city">
+    </div>
+    <div class="field">
+      <label class="field-label" for="resPropertyType">Property type</label>
+      <select class="select" id="resPropertyType">
+        <option value="">Any type</option>
+        <option value="house">House</option>
+        <option value="villa">Villa</option>
+        <option value="apartment">Apartment</option>
+      </select>
+    </div>
+    <div class="field">
+      <label class="field-label" for="resMinPrice">Min price</label>
+      <input class="input" id="resMinPrice" type="number" min="0" placeholder="0" style="width:110px">
+    </div>
+    <div class="field">
+      <label class="field-label" for="resMaxPrice">Max price</label>
+      <input class="input" id="resMaxPrice" type="number" min="0" placeholder="No limit" style="width:110px">
+    </div>
+    <button type="submit" class="btn-primary"><i class="fa-solid fa-magnifying-glass"></i> Apply filters</button>
+  </form>
 
-<!-- ============ LOGIN MODAL ============ -->
+  <p class="results-count" id="resultsCount"></p>
+
+  <div class="empty-state" id="resultsLoading">
+    <i class="fa-solid fa-circle-notch fa-spin"></i>
+    <p>Loading listings…</p>
+  </div>
+
+  <div class="empty-state" id="resultsEmpty" style="display:none">
+    <i class="fa-solid fa-house-circle-xmark"></i>
+    <p>No listings match your filters yet.</p>
+  </div>
+
+  <div class="listing-grid" id="resultsGrid"></div>
+</main>
+
+<div class="toast-stack" id="toastStack"></div>
+
 <div class="modal-overlay" id="loginModal">
   <div class="modal">
     <div class="modal-head">
@@ -135,7 +130,6 @@
   </div>
 </div>
 
-<!-- ============ REGISTER MODAL ============ -->
 <div class="modal-overlay" id="registerModal">
   <div class="modal wide">
     <div class="modal-head">
@@ -228,12 +222,11 @@
   </div>
 </div>
 
-<div class="toast-stack" id="toastStack"></div>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script src="countries.js"></script>
 <script src="supabase-client.js"></script>
 <script src="home.js"></script>
 <script src="auth.js"></script>
+<script src="listings.js"></script>
 </body>
 </html>

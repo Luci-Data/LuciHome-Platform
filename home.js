@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Fill every <select> that should list countries (search box + register form)
 function fillCountryDropdowns() {
-  const selects = document.querySelectorAll('#fCountry, #regCountry, #profCountry, #listCountry');
+  const selects = document.querySelectorAll('#fCountry, #regCountry, #profCountry, #listCountry, #resCountry');
   selects.forEach((select) => {
     LUCIHOME_COUNTRIES.forEach((country) => {
       const option = document.createElement('option');
@@ -69,14 +69,23 @@ function setupModals() {
 function openModal(modal) { modal.classList.add('open'); }
 function closeModal(modal) { modal.classList.remove('open'); }
 
-// The property search itself (results page) is a later stage — for now
-// we just confirm the click so the button doesn't feel dead.
+// The homepage search box hands off to the full results page, carrying
+// whatever the person picked as URL query parameters.
 function setupSearchForm() {
   const searchForm = document.getElementById('searchForm');
   if (!searchForm) return; // this page (e.g. profile.html) has no search bar
   searchForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    showToast('Search results page is coming in a later stage.', 'success');
+    const activeTab = document.querySelector('.search-tab.active');
+    const params = new URLSearchParams();
+    if (activeTab) params.set('type', activeTab.dataset.mode);
+    const country = document.getElementById('fCountry').value;
+    const city = document.getElementById('fCity').value.trim();
+    const propertyType = document.getElementById('fType').value;
+    if (country) params.set('country', country);
+    if (city) params.set('city', city);
+    if (propertyType) params.set('propertyType', propertyType);
+    window.location.href = 'listings.html?' + params.toString();
   });
 }
 

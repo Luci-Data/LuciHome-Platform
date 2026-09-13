@@ -1,0 +1,80 @@
+/* ==========================================================================
+   LuciHome — Browse / detail / my-listings shared styles
+   ========================================================================== */
+
+/* ---- filters bar (search results page) ---- */
+.filters-bar{
+  background:var(--bg-surface); border:1px solid var(--border); border-radius:12px;
+  padding:16px 20px; margin-bottom:22px; display:flex; flex-wrap:wrap; gap:14px; align-items:flex-end;
+}
+.filters-bar .field{ margin-bottom:0; min-width:140px; }
+.filters-bar .btn-primary{ height:38px; }
+
+.results-count{ font-size:13px; color:var(--text-secondary); margin:0 0 16px; }
+
+/* ---- listing cards grid ---- */
+.listing-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:18px; }
+.listing-card{
+  background:var(--bg-surface); border:1px solid var(--border); border-radius:14px; overflow:hidden;
+  cursor:pointer; transition:box-shadow .15s, transform .15s;
+}
+.listing-card:hover{ box-shadow:var(--shadow-2); transform:translateY(-2px); }
+.listing-card-img{ width:100%; aspect-ratio:4/3; object-fit:cover; background:var(--bg-elevated); display:block; }
+.listing-card-body{ padding:14px 16px; }
+.listing-badge{
+  display:inline-block; font-size:10.5px; font-weight:700; letter-spacing:.02em; text-transform:uppercase;
+  padding:3px 9px; border-radius:20px; background:var(--accent-tint); color:var(--accent); margin-bottom:8px;
+}
+.listing-card-price{ font-size:17px; font-weight:700; color:var(--text-primary); margin:0 0 4px; }
+.listing-card-title{ font-size:14px; color:var(--text-primary); margin:0 0 6px; font-weight:500; line-height:1.4; }
+.listing-card-loc{ font-size:12.5px; color:var(--text-secondary); margin:0 0 8px; }
+.listing-card-meta{ display:flex; gap:12px; font-size:12px; color:var(--text-muted); }
+.listing-card-meta span{ display:flex; align-items:center; gap:5px; }
+
+/* ---- listing detail page ---- */
+.gallery-main{ width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; background:var(--bg-elevated); margin-bottom:10px; }
+.gallery-main img{ width:100%; height:100%; object-fit:cover; }
+.gallery-strip{ display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-bottom:24px; }
+.gallery-strip img{
+  width:84px; height:64px; object-fit:cover; border-radius:8px; cursor:pointer; flex:0 0 auto;
+  border:2px solid transparent; opacity:.75;
+}
+.gallery-strip img.active{ border-color:var(--accent); opacity:1; }
+
+.detail-title-row{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; }
+.detail-price{ font-size:26px; font-weight:700; color:var(--text-primary); margin:0; }
+.detail-loc{ font-size:13.5px; color:var(--text-secondary); margin:4px 0 14px; }
+
+.detail-meta-row{ display:flex; gap:22px; padding:16px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); margin-bottom:20px; flex-wrap:wrap; }
+.detail-meta-item{ text-align:center; }
+.detail-meta-item .val{ font-size:16px; font-weight:600; color:var(--text-primary); }
+.detail-meta-item .lbl{ font-size:11.5px; color:var(--text-muted); }
+
+.feature-pills{ display:flex; flex-wrap:wrap; gap:8px; margin-top:6px; }
+.feature-pill{
+  font-size:12.5px; color:var(--text-secondary); background:var(--bg-elevated); border:1px solid var(--border);
+  padding:6px 12px; border-radius:20px; display:flex; align-items:center; gap:6px;
+}
+
+.contact-card{ position:sticky; top:84px; }
+@media (max-width:800px){ #detailLayout{ grid-template-columns:1fr !important; } .contact-card{ position:static; } }
+.contact-owner{ display:flex; align-items:center; gap:12px; margin-bottom:16px; }
+.contact-owner .name{ font-weight:500; font-size:14.5px; color:var(--text-primary); }
+.contact-owner .sub{ font-size:12px; color:var(--text-muted); }
+
+/* ---- my-listings page ---- */
+.my-listing-row{
+  display:flex; align-items:center; gap:16px; padding:14px; border-bottom:1px solid var(--border);
+}
+.my-listing-row:last-child{ border-bottom:none; }
+.my-listing-thumb{ width:88px; height:66px; border-radius:8px; object-fit:cover; background:var(--bg-elevated); flex:0 0 auto; }
+.my-listing-info{ flex:1; min-width:0; }
+.my-listing-info .t{ font-size:14px; font-weight:500; color:var(--text-primary); margin:0 0 3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.my-listing-info .p{ font-size:13px; color:var(--text-secondary); margin:0; }
+.my-listing-actions{ display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+.status-select{ font-size:12.5px; padding:6px 24px 6px 10px; }
+
+.status-pill{ font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; text-transform:capitalize; }
+.status-pill.active{ background:var(--success-tint); color:var(--success); }
+.status-pill.sold, .status-pill.rented{ background:var(--bg-elevated); color:var(--text-muted); }
+.status-pill.archived{ background:var(--danger-tint); color:var(--danger); }

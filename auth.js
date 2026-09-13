@@ -25,6 +25,9 @@ function setupAuthActions() {
   document.getElementById('btnMyProfile').addEventListener('click', () => {
     window.location.href = 'profile.html';
   });
+  document.getElementById('btnMyListings').addEventListener('click', () => {
+    window.location.href = 'my-listings.html';
+  });
 
   // "Add listing" behaves differently depending on whether you're logged in.
   document.getElementById('btnAddListing').addEventListener('click', () => {
