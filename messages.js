@@ -4,6 +4,7 @@
 
 let currentUserId = null;
 let activeConversationId = null;
+let activeRecipientId = null;
 let activeChannel = null;
 let conversationsCache = [];
 
@@ -107,6 +108,8 @@ async function openConversation(conversationId) {
   document.getElementById('chatActive').style.display = 'flex';
 
   const otherUserId = conversation.buyer_id === currentUserId ? conversation.seller_id : conversation.buyer_id;
+  activeRecipientId = otherUserId;
+
   const { data: otherUser } = await supabaseClient.rpc('get_public_profile', { profile_id: otherUserId });
   const other = Array.isArray(otherUser) ? otherUser[0] : otherUser;
 
@@ -126,6 +129,19 @@ async function openConversation(conversationId) {
 
   await loadMessages(conversationId);
   subscribeToConversation(conversationId);
+  await markConversationAsRead(conversationId);
+}
+
+async function markConversationAsRead(conversationId) {
+  const { error } = await supabaseClient
+    .from('messages')
+    .update({ read: true })
+    .eq('conversation_id', conversationId)
+    .eq('recipient_id', currentUserId)
+    .eq('read', false);
+
+  // notifications.js defines this; it's loaded on every page including this one.
+  if (!error && typeof refreshUnreadCount === 'function') refreshUnreadCount(currentUserId);
 }
 
 async function loadMessages(conversationId) {
@@ -197,6 +213,7 @@ async function handleSendMessage(e) {
   const { error } = await supabaseClient.from('messages').insert({
     conversation_id: activeConversationId,
     sender_id: currentUserId,
+    recipient_id: activeRecipientId,
     body
   });
 
