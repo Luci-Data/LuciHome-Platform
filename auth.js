@@ -31,6 +31,9 @@ function setupAuthActions() {
   document.getElementById('btnMyFavorites').addEventListener('click', () => {
     window.location.href = 'favorites.html';
   });
+  document.getElementById('btnMessages').addEventListener('click', () => {
+    window.location.href = 'messages.html';
+  });
 
   // "Add listing" behaves differently depending on whether you're logged in.
   document.getElementById('btnAddListing').addEventListener('click', () => {
