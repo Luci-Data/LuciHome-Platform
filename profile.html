@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <title>My profile — LuciHome</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -128,6 +129,12 @@
       <button type="submit" class="btn-primary" id="profileSave">Save changes</button>
     </div>
   </form>
+
+  <div class="card" id="dangerZone" style="display:none;margin-top:24px;border-color:var(--danger-tint)">
+    <p class="mt" style="color:var(--danger)">Danger zone</p>
+    <p class="ms">Deactivating your account permanently deletes your listings, photos, profile details, and favorites, and signs you out. This cannot be undone.</p>
+    <button type="button" class="btn-secondary" id="btnDeactivateAccount" style="border-color:var(--danger);color:var(--danger)">Deactivate my account</button>
+  </div>
 </main>
 
 <div class="toast-stack" id="toastStack"></div>
@@ -258,6 +265,7 @@
 <script src="home.js"></script>
 <script src="auth.js"></script>
 <script src="notifications.js"></script>
+<script src="storage-helpers.js"></script>
 <script src="profile.js"></script>
 </body>
 </html>

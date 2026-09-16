@@ -89,11 +89,9 @@ async function renderAuthState(session) {
   const avatarEl = document.getElementById('userAvatar');
   if (profile?.avatar_url) {
     avatarEl.textContent = '';
-    avatarEl.style.backgroundImage = `url("${profile.avatar_url}")`;
-    avatarEl.style.backgroundSize = 'cover';
-    avatarEl.style.backgroundPosition = 'center';
+    avatarEl.style.background = `#fff url("${profile.avatar_url}") center/cover no-repeat`;
   } else {
-    avatarEl.style.backgroundImage = 'none';
+    avatarEl.style.background = 'var(--accent)';
     avatarEl.textContent = initial;
   }
 }

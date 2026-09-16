@@ -21,9 +21,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   currentUserId = session.user.id;
   document.getElementById('profileForm').style.display = 'block';
+  document.getElementById('dangerZone').style.display = 'block';
 
   await loadProfile(session.user);
   setupProfileForm();
+  document.getElementById('btnDeactivateAccount').addEventListener('click', handleDeactivateAccount);
 });
 
 async function loadProfile(user) {
@@ -54,11 +56,9 @@ function renderAvatarPreview(avatarUrl, firstName, email) {
   const preview = document.getElementById('avatarPreview');
   if (avatarUrl) {
     preview.textContent = '';
-    preview.style.backgroundImage = `url("${avatarUrl}")`;
-    preview.style.backgroundSize = 'cover';
-    preview.style.backgroundPosition = 'center';
+    preview.style.background = `#fff url("${avatarUrl}") center/cover no-repeat`;
   } else {
-    preview.style.backgroundImage = 'none';
+    preview.style.background = 'var(--accent)';
     preview.textContent = (firstName?.[0] || email[0]).toUpperCase();
   }
 }
@@ -144,4 +144,44 @@ async function handleProfileSave(e) {
 
   showToast('Your profile has been updated.', 'success');
   updateAuthUI(); // refreshes the name shown in the topbar dropdown
+}
+
+async function handleDeactivateAccount() {
+  const confirmed = window.confirm(
+    'This will permanently delete your listings, photos, favorites, and profile, and sign you out. This cannot be undone. Continue?'
+  );
+  if (!confirmed) return;
+
+  const btn = document.getElementById('btnDeactivateAccount');
+  btn.disabled = true;
+  btn.textContent = 'Deactivating…';
+
+  // 1. Clean up storage for every listing this account owns.
+  const { data: myListings } = await supabaseClient.from('listings').select('id').eq('owner_id', currentUserId);
+  for (const listing of myListings || []) {
+    await cleanupListingPhotos(currentUserId, listing.id);
+  }
+
+  // 2. Delete the listings themselves (cascades to their listing_photos rows).
+  await supabaseClient.from('listings').delete().eq('owner_id', currentUserId);
+
+  // 3. Delete this account's favorites.
+  await supabaseClient.from('favorites').delete().eq('user_id', currentUserId);
+
+  // 4. Remove the avatar photo from storage.
+  await cleanupAvatar(currentUserId);
+
+  // 5. Delete the profile row itself.
+  const { error } = await supabaseClient.from('profiles').delete().eq('id', currentUserId);
+
+  if (error) {
+    showToast('Could not finish deactivating your account: ' + error.message, 'danger');
+    btn.disabled = false;
+    btn.textContent = 'Deactivate my account';
+    return;
+  }
+
+  // 6. Sign out.
+  await supabaseClient.auth.signOut();
+  window.location.href = 'index.html';
 }

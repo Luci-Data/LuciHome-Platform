@@ -46,6 +46,7 @@ async function loadListing() {
   content.style.display = 'block';
   renderListing(listing);
   loadOwner(listing.owner_id, listing.id);
+  supabaseClient.rpc('increment_listing_views', { listing_id: listing.id });
 
   const heartBtn = document.getElementById('detailHeartBtn');
   heartBtn.classList.toggle('active', favoriteIds.has(listing.id));
@@ -110,9 +111,7 @@ async function loadOwner(ownerId, listingId) {
 
   const avatarEl = document.getElementById('ownerAvatar');
   if (owner.avatar_url) {
-    avatarEl.style.backgroundImage = `url("${owner.avatar_url}")`;
-    avatarEl.style.backgroundSize = 'cover';
-    avatarEl.style.backgroundPosition = 'center';
+    avatarEl.style.background = `#fff url("${owner.avatar_url}") center/cover no-repeat`;
     avatarEl.textContent = '';
   } else {
     avatarEl.textContent = (owner.first_name?.[0] || '?').toUpperCase();

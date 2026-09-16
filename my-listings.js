@@ -1,6 +1,8 @@
 // ==========================================================================
-// LuciHome — My Listings page (Stage 6)
+// LuciHome — My Listings page (Stage 6, views + cleanup added later)
 // ==========================================================================
+
+let currentUserId = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await supabaseClient.auth.getSession();
@@ -11,13 +13,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  await loadMyListings(session.user.id);
+  currentUserId = session.user.id;
+  await loadMyListings(currentUserId);
 });
 
 async function loadMyListings(userId) {
   const { data, error } = await supabaseClient
     .from('listings')
-    .select('id,title,price,currency,status,listing_photos(photo_url,sort_order)')
+    .select('id,title,price,currency,status,views,listing_photos(photo_url,sort_order)')
     .eq('owner_id', userId)
     .order('created_at', { ascending: false });
 
@@ -49,7 +52,7 @@ function renderRow(listing) {
       : `<div class="my-listing-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><i class="fa-solid fa-house"></i></div>`}
     <div class="my-listing-info">
       <p class="t">${escapeHtml(listing.title)}</p>
-      <p class="p">${formatPrice(listing.price, listing.currency)}</p>
+      <p class="p">${formatPrice(listing.price, listing.currency)} · <i class="fa-solid fa-eye"></i> ${listing.views || 0} views</p>
     </div>
     <div class="my-listing-actions">
       <select class="select status-select" data-id="${listing.id}">
@@ -84,6 +87,8 @@ async function updateStatus(listingId, newStatus) {
 async function deleteListing(listingId, rowEl) {
   const confirmed = window.confirm('Delete this listing permanently? This cannot be undone.');
   if (!confirmed) return;
+
+  await cleanupListingPhotos(currentUserId, listingId);
 
   const { error } = await supabaseClient.from('listings').delete().eq('id', listingId);
   if (error) {

@@ -118,12 +118,10 @@ async function openConversation(conversationId) {
 
   const avatarEl = document.getElementById('chatOwnerAvatar');
   if (other?.avatar_url) {
-    avatarEl.style.backgroundImage = `url("${other.avatar_url}")`;
-    avatarEl.style.backgroundSize = 'cover';
-    avatarEl.style.backgroundPosition = 'center';
+    avatarEl.style.background = `#fff url("${other.avatar_url}") center/cover no-repeat`;
     avatarEl.textContent = '';
   } else {
-    avatarEl.style.backgroundImage = 'none';
+    avatarEl.style.background = 'var(--accent)';
     avatarEl.textContent = (other?.first_name?.[0] || '?').toUpperCase();
   }
 
