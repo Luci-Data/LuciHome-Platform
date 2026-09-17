@@ -5,7 +5,16 @@
    stays visually consistent as we add more pages.
    ========================================================================== */
 
-body{ padding-top:var(--topbar-h); }
+:root{ --beta-banner-h: 34px; }
+body{ padding-top:calc(var(--topbar-h) + var(--beta-banner-h)); }
+.topbar{ top:var(--beta-banner-h); }
+
+.beta-banner{
+  position:fixed; top:0; left:0; right:0; z-index:110;
+  background:var(--warning-tint); color:#B06000;
+  text-align:center; font-size:12px; font-weight:600; padding:8px 12px; letter-spacing:.01em;
+}
+.beta-banner i{ margin-right:6px; }
 
 /* Public topbar: same look as the app topbar, but with auth buttons
    instead of the search box / avatar (visitor isn't logged in yet). */
