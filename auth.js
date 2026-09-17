@@ -138,9 +138,11 @@ async function handleRegister() {
     return;
   }
 
+  const firstName = document.getElementById('regFirstName').value.trim();
+
   const { error: profileError } = await supabaseClient.from('profiles').insert({
     id: userId,
-    first_name: document.getElementById('regFirstName').value.trim(),
+    first_name: firstName,
     last_name: document.getElementById('regLastName').value.trim(),
     birth_date: birthDate,
     gender: document.getElementById('regGender').value,
@@ -158,9 +160,17 @@ async function handleRegister() {
     return;
   }
 
-  showToast('Account created — welcome to LuciHome!', 'success');
   form.reset();
   closeModal(document.getElementById('registerModal'));
+
+  // With email confirmation ON, signUp returns a user but no session yet —
+  // the person needs to click the confirmation link before they can log in.
+  if (!data.session) {
+    showToast(`Almost there, ${firstName}! Check your email to confirm your account, then log in.`, 'success');
+    return;
+  }
+
+  showToast(`Welcome to LuciHome, ${firstName}! 🎉`, 'success');
   updateAuthUI();
 }
 
@@ -175,7 +185,7 @@ async function handleLogin() {
   submitBtn.disabled = true;
   submitBtn.textContent = 'Logging in…';
 
-  const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
   submitBtn.disabled = false;
   submitBtn.textContent = 'Log in';
@@ -185,10 +195,17 @@ async function handleLogin() {
     return;
   }
 
-  showToast('Welcome back!', 'success');
   form.reset();
   closeModal(document.getElementById('loginModal'));
   updateAuthUI();
+
+  const { data: profile } = await supabaseClient
+    .from('profiles')
+    .select('first_name')
+    .eq('id', data.user.id)
+    .single();
+
+  showToast(profile?.first_name ? `Welcome back, ${profile.first_name}!` : 'Welcome back!', 'success');
 }
 
 async function handleLogout() {
