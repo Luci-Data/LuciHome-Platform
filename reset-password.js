@@ -34,7 +34,7 @@ async function handleRequestCode(e) {
   document.getElementById('codeSentTo').textContent = resetEmail;
   document.getElementById('stepRequestCode').style.display = 'none';
   document.getElementById('stepVerifyCode').style.display = 'block';
-  showToast('Check your email for the 6-digit code.', 'success');
+  showToast('Check your email for the 8-digit code.', 'success');
 }
 
 async function handleVerifyAndReset(e) {
