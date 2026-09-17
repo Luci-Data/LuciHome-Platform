@@ -83,6 +83,16 @@ body{ padding-top:var(--topbar-h); }
   font-weight:700; min-width:16px; height:16px; border-radius:8px; display:none; align-items:center;
   justify-content:center; padding:0 4px; line-height:1;
 }
+
+.cookie-banner{
+  position:fixed; left:16px; right:16px; bottom:16px; max-width:640px; margin:0 auto;
+  background:var(--bg-surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow-2);
+  padding:16px 18px; display:none; gap:14px; align-items:center; z-index:500;
+}
+.cookie-banner p{ font-size:12.5px; color:var(--text-secondary); margin:0; flex:1; line-height:1.5; }
+.cookie-banner a{ color:var(--accent); }
+.cookie-banner .btn-primary{ flex:0 0 auto; white-space:nowrap; }
+@media (max-width:600px){ .cookie-banner{ flex-direction:column; align-items:stretch; } }
 .auth-switch a{ font-weight:500; cursor:pointer; }
 .phone-row{ display:flex; gap:10px; align-items:center; }
 .phone-row .input{ flex:1; }

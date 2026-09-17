@@ -107,6 +107,11 @@
   <div class="listing-grid" id="resultsGrid"></div>
 </main>
 
+<div class="cookie-banner" id="cookieBanner">
+  <p>We use local storage to keep you logged in and remember your preferences. By using LuciHome, you agree to our <a href="privacy.html">Privacy Policy</a>.</p>
+  <button class="btn-primary btn-sm" id="cookieAccept">Got it</button>
+</div>
+
 <div class="toast-stack" id="toastStack"></div>
 
 <div class="modal-overlay" id="loginModal">
@@ -216,7 +221,7 @@
 
         <div class="chk-row">
           <input type="checkbox" id="regTerms" required>
-          <label for="regTerms">I agree to the Terms of Service and Privacy Policy</label>
+          <label for="regTerms">I agree to the <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></label>
         </div>
       </form>
     </div>
@@ -231,6 +236,7 @@
 <script src="countries.js"></script>
 <script src="supabase-client.js"></script>
 <script src="home.js"></script>
+<script src="cookie-consent.js"></script>
 <script src="auth.js"></script>
 <script src="notifications.js"></script>
 <script src="listing-card.js"></script>

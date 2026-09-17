@@ -1,0 +1,13 @@
+/* ==========================================================================
+   LuciHome — Terms of Service / Privacy Policy pages
+   ========================================================================== */
+
+.legal-doc{ max-width:740px; margin:0 auto; padding:40px 24px 100px; }
+.legal-doc h1{ font-family:var(--font-display); font-weight:500; font-size:var(--text-3xl); margin:0 0 6px; color:var(--text-primary); }
+.legal-doc .updated{ font-size:12.5px; color:var(--text-muted); margin:0 0 32px; }
+.legal-doc h2{ font-family:var(--font-display); font-weight:500; font-size:17.5px; margin:32px 0 10px; color:var(--text-primary); }
+.legal-doc p{ font-size:14px; line-height:1.7; color:var(--text-secondary); margin:0 0 12px; }
+.legal-doc ul{ padding-left:20px; margin:8px 0 16px; }
+.legal-doc li{ font-size:14px; line-height:1.7; color:var(--text-secondary); margin-bottom:6px; }
+.legal-doc a{ color:var(--accent); }
+.legal-doc .note-box{ margin-bottom:28px; }
