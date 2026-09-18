@@ -16,6 +16,21 @@ async function cleanupListingPhotos(userId, listingId) {
   await supabaseClient.storage.from('listing-photos').remove(paths);
 }
 
+// Removes specific listing photos (used when editing a listing and the
+// person deletes just one or two photos, not the whole listing).
+async function removeStoragePhotosByUrl(bucket, publicUrls) {
+  const marker = `/storage/v1/object/public/${bucket}/`;
+  const paths = publicUrls
+    .map((url) => {
+      const idx = url.indexOf(marker);
+      return idx === -1 ? null : url.slice(idx + marker.length);
+    })
+    .filter(Boolean);
+
+  if (paths.length === 0) return;
+  await supabaseClient.storage.from(bucket).remove(paths);
+}
+
 async function cleanupAvatar(userId) {
   const { data: files, error } = await supabaseClient.storage.from('avatars').list(userId);
   if (error || !files || files.length === 0) return;

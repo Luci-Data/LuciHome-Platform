@@ -62,6 +62,7 @@ function renderRow(listing) {
         <option value="archived" ${listing.status === 'archived' ? 'selected' : ''}>Archived</option>
       </select>
       <button class="btn-secondary btn-sm" data-view="${listing.id}"><i class="fa-solid fa-eye"></i></button>
+      <button class="btn-secondary btn-sm" data-edit="${listing.id}"><i class="fa-solid fa-pen"></i></button>
       <button class="btn-secondary btn-sm" data-delete="${listing.id}"><i class="fa-solid fa-trash"></i></button>
     </div>
   `;
@@ -69,6 +70,9 @@ function renderRow(listing) {
   row.querySelector('.status-select').addEventListener('change', (e) => updateStatus(listing.id, e.target.value, listing.title));
   row.querySelector('[data-view]').addEventListener('click', () => {
     window.location.href = `listing-detail.html?id=${listing.id}`;
+  });
+  row.querySelector('[data-edit]').addEventListener('click', () => {
+    window.location.href = `edit-listing.html?id=${listing.id}`;
   });
   row.querySelector('[data-delete]').addEventListener('click', () => deleteListing(listing.id, row, listing.title));
 
