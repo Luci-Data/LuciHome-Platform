@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Disallow: /profile.html
+Disallow: /my-listings.html
+Disallow: /favorites.html
+Disallow: /messages.html
+Disallow: /add-listing.html
+Disallow: /edit-listing.html
+Disallow: /reset-password.html
+
+Sitemap: https://lucihome.com/sitemap.xml
