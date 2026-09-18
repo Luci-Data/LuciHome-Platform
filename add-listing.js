@@ -187,6 +187,8 @@ async function handlePublish(e) {
     showToast('Your listing is live!', 'success');
   }
 
+  logNotification(currentUserId, 'listing_published', 'Listing published', `"${listingPayload.title}" is now live on LuciHome.`);
+
   // Search results page (where the listing will actually be visible) is a
   // later stage — for now, back to the homepage.
   setTimeout(() => { window.location.href = 'index.html'; }, 1200);

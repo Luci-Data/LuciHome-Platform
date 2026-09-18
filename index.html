@@ -30,7 +30,16 @@
   </div>
   <div class="dropdown public-auth-actions" id="userMenu" style="display:none">
     <button class="btn-secondary" id="btnAddListingLoggedIn"><i class="fa-solid fa-plus"></i> Add listing</button>
-    <button class="icon-btn" id="btnNotifications" title="Messages"><i class="fa-solid fa-bell"></i><span class="badge" id="notifBadge">0</span></button>
+    <div class="dropdown" id="notifDropdownWrap">
+      <button class="icon-btn" id="btnNotifications" title="Notifications"><i class="fa-solid fa-bell"></i><span class="badge" id="notifBadge">0</span></button>
+      <div class="dropdown-panel" id="notifPanel" style="width:320px">
+        <div class="dropdown-header"><strong>Notifications</strong></div>
+        <div class="dropdown-sep"></div>
+        <div id="notifList" style="max-height:320px;overflow-y:auto"></div>
+        <div class="dropdown-sep"></div>
+        <div class="dropdown-item" id="notifViewMessages"><i class="fa-solid fa-comments"></i> View messages</div>
+      </div>
+    </div>
     <div class="topbar-avatar" id="userAvatar" tabindex="0">?</div>
     <div class="dropdown-panel" id="userDropdown">
       <div class="dropdown-header">

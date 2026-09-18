@@ -78,5 +78,9 @@ async function handleVerifyAndReset(e) {
   }
 
   showToast('Password updated! You are now logged in.', 'success');
+
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (user) logNotification(user.id, 'password_changed', 'Password changed', 'Your password was reset successfully.');
+
   setTimeout(() => { window.location.href = 'index.html'; }, 1200);
 }

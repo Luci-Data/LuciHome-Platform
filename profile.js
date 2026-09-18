@@ -144,6 +144,7 @@ async function handleProfileSave(e) {
 
   showToast('Your profile has been updated.', 'success');
   updateAuthUI(); // refreshes the name shown in the topbar dropdown
+  logNotification(currentUserId, 'profile_updated', 'Profile updated', 'Your profile details were saved successfully.');
 }
 
 async function handleDeactivateAccount() {

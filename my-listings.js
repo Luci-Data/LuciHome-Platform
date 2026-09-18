@@ -66,25 +66,26 @@ function renderRow(listing) {
     </div>
   `;
 
-  row.querySelector('.status-select').addEventListener('change', (e) => updateStatus(listing.id, e.target.value));
+  row.querySelector('.status-select').addEventListener('change', (e) => updateStatus(listing.id, e.target.value, listing.title));
   row.querySelector('[data-view]').addEventListener('click', () => {
     window.location.href = `listing-detail.html?id=${listing.id}`;
   });
-  row.querySelector('[data-delete]').addEventListener('click', () => deleteListing(listing.id, row));
+  row.querySelector('[data-delete]').addEventListener('click', () => deleteListing(listing.id, row, listing.title));
 
   return row;
 }
 
-async function updateStatus(listingId, newStatus) {
+async function updateStatus(listingId, newStatus, title) {
   const { error } = await supabaseClient.from('listings').update({ status: newStatus }).eq('id', listingId);
   if (error) {
     showToast('Could not update status: ' + error.message, 'danger');
     return;
   }
   showToast('Listing status updated.', 'success');
+  logNotification(currentUserId, 'listing_status_changed', 'Listing status updated', `"${title}" is now marked as ${newStatus}.`);
 }
 
-async function deleteListing(listingId, rowEl) {
+async function deleteListing(listingId, rowEl, title) {
   const confirmed = window.confirm('Delete this listing permanently? This cannot be undone.');
   if (!confirmed) return;
 
@@ -97,6 +98,7 @@ async function deleteListing(listingId, rowEl) {
   }
   rowEl.remove();
   showToast('Listing deleted.', 'success');
+  logNotification(currentUserId, 'listing_deleted', 'Listing deleted', `"${title}" was permanently deleted.`);
 }
 
 function formatPrice(price, currency) {
