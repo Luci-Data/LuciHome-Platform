@@ -17,6 +17,16 @@
 </head>
 <body>
 <div class="beta-banner"><i class="fa-solid fa-flask"></i>LuciHome is in Beta / Early Access — the platform is not yet officially launched.</div>
+<script>
+(function(){
+  function setBetaBannerHeight(){
+    var b = document.querySelector('.beta-banner');
+    if (b) document.documentElement.style.setProperty('--beta-banner-h', b.offsetHeight + 'px');
+  }
+  setBetaBannerHeight();
+  window.addEventListener('resize', setBetaBannerHeight);
+})();
+</script>
 
 <header class="topbar public-topbar">
   <div class="topbar-brand">
