@@ -46,7 +46,8 @@ async function loadListing() {
   content.style.display = 'block';
   renderListing(listing);
   loadOwner(listing.owner_id, listing.id);
-  supabaseClient.rpc('increment_listing_views', { listing_id: listing.id });
+  supabaseClient.rpc('increment_listing_views', { listing_id: listing.id })
+    .then(({ error }) => { if (error) console.error('View count update failed:', error.message); });
 
   const heartBtn = document.getElementById('detailHeartBtn');
   heartBtn.classList.toggle('active', favoriteIds.has(listing.id));

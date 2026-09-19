@@ -3,6 +3,7 @@
 // ==========================================================================
 
 let currentUserId = null;
+let listingsChannel = null;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await supabaseClient.auth.getSession();
@@ -15,7 +16,27 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   currentUserId = session.user.id;
   await loadMyListings(currentUserId);
+  subscribeToOwnListingChanges(currentUserId);
 });
+
+// Live-updates the view count (and status, if changed from elsewhere) the
+// moment someone views one of this owner's listings — no refresh needed.
+function subscribeToOwnListingChanges(userId) {
+  if (listingsChannel) supabaseClient.removeChannel(listingsChannel);
+
+  listingsChannel = supabaseClient
+    .channel(`my-listings-${userId}`)
+    .on('postgres_changes', {
+      event: 'UPDATE', schema: 'public', table: 'listings', filter: `owner_id=eq.${userId}`
+    }, (payload) => {
+      const viewsEl = document.getElementById(`views-${payload.new.id}`);
+      if (viewsEl) viewsEl.textContent = payload.new.views || 0;
+
+      const statusSelect = document.querySelector(`.status-select[data-id="${payload.new.id}"]`);
+      if (statusSelect && statusSelect.value !== payload.new.status) statusSelect.value = payload.new.status;
+    })
+    .subscribe();
+}
 
 async function loadMyListings(userId) {
   const { data, error } = await supabaseClient
@@ -52,7 +73,7 @@ function renderRow(listing) {
       : `<div class="my-listing-thumb" style="display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><i class="fa-solid fa-house"></i></div>`}
     <div class="my-listing-info">
       <p class="t">${escapeHtml(listing.title)}</p>
-      <p class="p">${formatPrice(listing.price, listing.currency)} · <i class="fa-solid fa-eye"></i> ${listing.views || 0} views</p>
+      <p class="p">${formatPrice(listing.price, listing.currency)} · <i class="fa-solid fa-eye"></i> <span id="views-${listing.id}">${listing.views || 0}</span> views</p>
     </div>
     <div class="my-listing-actions">
       <select class="select status-select" data-id="${listing.id}">
