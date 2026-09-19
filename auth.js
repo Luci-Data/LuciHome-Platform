@@ -18,8 +18,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+let registrationStep = 'form'; // 'form' or 'verify'
+let pendingRegisterEmail = '';
+let pendingRegisterFirstName = '';
+
 function setupAuthActions() {
-  document.getElementById('registerSubmit').addEventListener('click', handleRegister);
+  document.getElementById('registerSubmit').addEventListener('click', () => {
+    if (registrationStep === 'form') handleRegister();
+    else handleVerifyRegistration();
+  });
+  document.getElementById('resendRegCode').addEventListener('click', handleResendRegisterCode);
   document.getElementById('loginSubmit').addEventListener('click', handleLogin);
   document.getElementById('btnLogout').addEventListener('click', handleLogout);
   document.getElementById('btnMyProfile').addEventListener('click', () => {
@@ -126,10 +134,6 @@ async function handleRegister() {
     return;
   }
 
-  // With "Confirm email" turned off (Stage 2 setup), data.user exists right
-  // away and the person is already logged in. If confirmation gets turned
-  // back on later, data.user still exists but there's no session yet —
-  // we still save the profile so it's ready the moment they confirm.
   const userId = data.user?.id;
   if (!userId) {
     showToast('Something went wrong creating your account. Please try again.', 'danger');
@@ -152,26 +156,92 @@ async function handleRegister() {
     phone_visible: document.getElementById('regPhoneVisible').checked
   });
 
-  submitBtn.disabled = false;
-  submitBtn.textContent = 'Create account';
-
   if (profileError) {
     showToast('Your account was created, but saving your details failed: ' + profileError.message, 'danger');
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Create account';
     return;
   }
 
-  form.reset();
+  // With email confirmation OFF (shouldn't normally happen with this flow,
+  // but handled just in case), signUp already returns a session.
+  if (data.session) {
+    submitBtn.disabled = false;
+    submitBtn.textContent = 'Create account';
+    form.reset();
+    closeModal(document.getElementById('registerModal'));
+    showToast(`Welcome to LuciHome, ${firstName}! 🎉`, 'success');
+    updateAuthUI();
+    return;
+  }
+
+  // Normal path: switch the same modal to the "enter your code" step.
+  pendingRegisterEmail = email;
+  pendingRegisterFirstName = firstName;
+  registrationStep = 'verify';
+
+  document.getElementById('registerForm').style.display = 'none';
+  document.getElementById('regVerifyEmail').textContent = email;
+  document.getElementById('registerVerifyStep').style.display = 'block';
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Verify & finish';
+
+  showToast('Check your email for a verification code.', 'success');
+}
+
+async function handleVerifyRegistration() {
+  const code = document.getElementById('regVerifyCode').value.trim();
+  if (!code) {
+    showToast('Enter the code from your email.', 'danger');
+    return;
+  }
+
+  const submitBtn = document.getElementById('registerSubmit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Verifying…';
+
+  const { error } = await supabaseClient.auth.verifyOtp({
+    email: pendingRegisterEmail,
+    token: code,
+    type: 'signup'
+  });
+
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Verify & finish';
+
+  if (error) {
+    showToast('Invalid or expired code: ' + error.message, 'danger');
+    return;
+  }
+
+  const firstName = pendingRegisterFirstName;
+  registrationStep = 'form';
+  document.getElementById('registerForm').reset();
   closeModal(document.getElementById('registerModal'));
-
-  // With email confirmation ON, signUp returns a user but no session yet —
-  // the person needs to click the confirmation link before they can log in.
-  if (!data.session) {
-    showToast(`Almost there, ${firstName}! Check your email to confirm your account, then log in.`, 'success');
-    return;
-  }
-
   showToast(`Welcome to LuciHome, ${firstName}! 🎉`, 'success');
   updateAuthUI();
+}
+
+async function handleResendRegisterCode(e) {
+  e.preventDefault();
+  if (!pendingRegisterEmail) return;
+
+  const { error } = await supabaseClient.auth.resend({ type: 'signup', email: pendingRegisterEmail });
+  if (error) {
+    showToast('Could not resend the code: ' + error.message, 'danger');
+    return;
+  }
+  showToast('A new code is on its way.', 'success');
+}
+
+// Called every time the register modal is opened, so a cancelled
+// verification doesn't carry over into the next attempt.
+function resetRegisterModalStep() {
+  registrationStep = 'form';
+  document.getElementById('registerForm').style.display = 'block';
+  document.getElementById('registerVerifyStep').style.display = 'none';
+  document.getElementById('registerSubmit').textContent = 'Create account';
 }
 
 async function handleLogin() {

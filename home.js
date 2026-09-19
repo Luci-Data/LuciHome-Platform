@@ -66,7 +66,12 @@ function setupModals() {
   });
 }
 
-function openModal(modal) { modal.classList.add('open'); }
+function openModal(modal) {
+  if (modal.id === 'registerModal' && typeof resetRegisterModalStep === 'function') {
+    resetRegisterModalStep();
+  }
+  modal.classList.add('open');
+}
 function closeModal(modal) { modal.classList.remove('open'); }
 
 // The homepage search box hands off to the full results page, carrying

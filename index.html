@@ -255,6 +255,15 @@
           <label for="regTerms">I agree to the <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a></label>
         </div>
       </form>
+
+      <div id="registerVerifyStep" style="display:none">
+        <p class="ms" style="margin-bottom:14px">We sent a verification code to <strong id="regVerifyEmail"></strong>. Enter it below to activate your account.</p>
+        <div class="field">
+          <label class="field-label" for="regVerifyCode">Verification code</label>
+          <input class="input" id="regVerifyCode" type="text" inputmode="numeric" maxlength="12" placeholder="Enter the code from your email" style="letter-spacing:4px;font-size:18px;text-align:center">
+        </div>
+        <p class="auth-switch"><a id="resendRegCode">Didn't get a code? Send again</a></p>
+      </div>
     </div>
     <div class="modal-foot">
       <button class="btn-secondary" data-close-modal>Cancel</button>
