@@ -15,7 +15,7 @@ let selectedListingType = 'sale';
 let selectedPropertyType = 'house';
 const selectedPhotos = []; // { file, previewUrl }
 const MAX_PHOTOS = 12;
-const MAX_PHOTO_SIZE_MB = 8;
+const MAX_PHOTO_SIZE_MB = 15;
 
 document.addEventListener('DOMContentLoaded', async () => {
   const { data: { session } } = await supabaseClient.auth.getSession();
@@ -83,7 +83,7 @@ function setupPhotoUpload() {
   dropzone.addEventListener('drop', (e) => addPhotos(e.dataTransfer.files));
 }
 
-function addPhotos(fileList) {
+async function addPhotos(fileList) {
   const files = Array.from(fileList);
   for (const file of files) {
     if (selectedPhotos.length >= MAX_PHOTOS) {
@@ -95,7 +95,8 @@ function addPhotos(fileList) {
       showToast(`${file.name} is larger than ${MAX_PHOTO_SIZE_MB}MB and was skipped.`, 'danger');
       continue;
     }
-    selectedPhotos.push({ file, previewUrl: URL.createObjectURL(file) });
+    const compressedFile = await compressImage(file, 1920, 0.8);
+    selectedPhotos.push({ file: compressedFile, previewUrl: URL.createObjectURL(compressedFile) });
   }
   renderPhotoGrid();
   document.getElementById('photoInput').value = ''; // allow re-selecting the same file later

@@ -77,16 +77,18 @@ async function handleAvatarUpload(e) {
   const file = e.target.files[0];
   if (!file) return;
 
-  const extension = file.name.split('.').pop();
-  const path = `${currentUserId}/avatar-${Date.now()}.${extension}`;
-
   const uploadBtn = document.getElementById('btnChangePhoto');
   uploadBtn.disabled = true;
+  uploadBtn.textContent = 'Compressing…';
+
+  const compressedFile = await compressImage(file, 512, 0.85);
+  const path = `${currentUserId}/avatar-${Date.now()}.jpg`;
+
   uploadBtn.textContent = 'Uploading…';
 
   const { error: uploadError } = await supabaseClient.storage
     .from('avatars')
-    .upload(path, file, { upsert: true });
+    .upload(path, compressedFile, { upsert: true });
 
   if (uploadError) {
     showToast('Photo upload failed: ' + uploadError.message, 'danger');
