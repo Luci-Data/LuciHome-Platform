@@ -80,14 +80,23 @@
 
 /* ---- my-listings page ---- */
 .my-listing-row{
-  display:flex; align-items:center; gap:16px; padding:14px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; gap:16px; padding:14px; border-bottom:1px solid var(--border); flex-wrap:wrap;
 }
 .my-listing-row:last-child{ border-bottom:none; }
 .my-listing-thumb{ width:88px; height:66px; border-radius:8px; object-fit:cover; background:var(--bg-elevated); flex:0 0 auto; }
-.my-listing-info{ flex:1; min-width:0; }
+.my-listing-info{ flex:1 1 auto; min-width:0; }
 .my-listing-info .t{ font-size:14px; font-weight:500; color:var(--text-primary); margin:0 0 3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.my-listing-info .p{ font-size:13px; color:var(--text-secondary); margin:0; }
+.my-listing-info .p{ font-size:13px; color:var(--text-secondary); margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
 .my-listing-actions{ display:flex; align-items:center; gap:8px; flex:0 0 auto; }
+
+@media (max-width:640px){
+  .my-listing-row{ align-items:flex-start; }
+  .my-listing-actions{
+    flex:1 1 100%; justify-content:space-between; margin-top:4px; gap:6px;
+  }
+  .my-listing-actions .status-select{ flex:1 1 auto; min-width:0; }
+  .my-listing-actions .btn-sm{ flex:0 0 auto; padding:6px 10px; }
+}
 .status-select{ font-size:12.5px; padding:6px 24px 6px 10px; }
 
 .status-pill{ font-size:11px; font-weight:600; padding:3px 9px; border-radius:20px; text-transform:capitalize; }

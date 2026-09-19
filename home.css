@@ -105,6 +105,24 @@ img.mark{
 .notif-item.unread .t::before{ content:''; position:absolute; top:14px; right:10px; width:7px; height:7px; border-radius:50%; background:var(--accent); }
 .notif-empty{ padding:24px 12px; text-align:center; font-size:12.5px; color:var(--text-muted); }
 
+/* ---- Mobile topbar: keep everything on one line, never wrapped/cut off ---- */
+@media (max-width:520px){
+  .topbar{ padding:0 10px; gap:6px; }
+  .topbar-brand{ gap:8px; padding:0; width:auto; }
+  .topbar-brand .wordmark{ display:none; }
+  .public-auth-actions{ gap:6px; }
+  .public-auth-actions .btn-secondary,
+  .public-auth-actions .btn-primary{
+    padding:0 10px; font-size:12px; height:34px; white-space:nowrap;
+  }
+  #btnAddListing, #btnAddListingLoggedIn{
+    width:34px; height:34px; padding:0; border-radius:50%; justify-content:center;
+  }
+  #btnAddListing .btn-label, #btnAddListingLoggedIn .btn-label{ display:none; }
+  .icon-btn{ width:34px; height:34px; }
+  .topbar-avatar{ width:34px; height:34px; }
+}
+
 .cookie-banner{
   position:fixed; left:16px; right:16px; bottom:16px; max-width:640px; margin:0 auto;
   background:var(--bg-surface); border:1px solid var(--border); border-radius:12px; box-shadow:var(--shadow-2);
