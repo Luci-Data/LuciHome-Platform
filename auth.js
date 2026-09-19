@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
 let registrationStep = 'form'; // 'form' or 'verify'
 let pendingRegisterEmail = '';
 let pendingRegisterFirstName = '';
+let pendingProfileData = null;
 
 function setupAuthActions() {
   document.getElementById('registerSubmit').addEventListener('click', () => {
@@ -144,7 +145,11 @@ async function handleRegister() {
 
   const firstName = document.getElementById('regFirstName').value.trim();
 
-  const { error: profileError } = await supabaseClient.from('profiles').insert({
+  // Important: we can't save the profile row yet — with email confirmation
+  // required, there is no active session right after signUp, so the
+  // database's security rules would reject the insert. We stash the data
+  // and save it once verifyOtp actually logs the person in.
+  pendingProfileData = {
     id: userId,
     first_name: firstName,
     last_name: document.getElementById('regLastName').value.trim(),
@@ -154,20 +159,21 @@ async function handleRegister() {
     city: document.getElementById('regCity').value.trim(),
     phone: document.getElementById('regPhone').value.trim(),
     phone_visible: document.getElementById('regPhoneVisible').checked
-  });
-
-  if (profileError) {
-    showToast('Your account was created, but saving your details failed: ' + profileError.message, 'danger');
-    submitBtn.disabled = false;
-    submitBtn.textContent = 'Create account';
-    return;
-  }
+  };
 
   // With email confirmation OFF (shouldn't normally happen with this flow,
-  // but handled just in case), signUp already returns a session.
+  // but handled just in case), signUp already returns a session, so we can
+  // save the profile immediately.
   if (data.session) {
+    const { error: profileError } = await supabaseClient.from('profiles').insert(pendingProfileData);
     submitBtn.disabled = false;
     submitBtn.textContent = 'Create account';
+
+    if (profileError) {
+      showToast('Your account was created, but saving your details failed: ' + profileError.message, 'danger');
+      return;
+    }
+
     form.reset();
     closeModal(document.getElementById('registerModal'));
     showToast(`Welcome to LuciHome, ${firstName}! 🎉`, 'success');
@@ -215,12 +221,27 @@ async function handleVerifyRegistration() {
     return;
   }
 
+  // Now that we're actually logged in, this insert passes the database's
+  // security rules (auth.uid() now matches the new account's id).
+  let profileError = null;
+  if (pendingProfileData) {
+    const { error: insertError } = await supabaseClient.from('profiles').insert(pendingProfileData);
+    profileError = insertError;
+  }
+
   const firstName = pendingRegisterFirstName;
   registrationStep = 'form';
+  pendingProfileData = null;
   document.getElementById('registerForm').reset();
   closeModal(document.getElementById('registerModal'));
-  showToast(`Welcome to LuciHome, ${firstName}! 🎉`, 'success');
   updateAuthUI();
+
+  if (profileError) {
+    showToast('Your account is verified, but saving your details failed: ' + profileError.message, 'danger');
+    return;
+  }
+
+  showToast(`Welcome to LuciHome, ${firstName}! 🎉`, 'success');
 }
 
 async function handleResendRegisterCode(e) {
@@ -239,6 +260,7 @@ async function handleResendRegisterCode(e) {
 // verification doesn't carry over into the next attempt.
 function resetRegisterModalStep() {
   registrationStep = 'form';
+  pendingProfileData = null;
   document.getElementById('registerForm').style.display = 'block';
   document.getElementById('registerVerifyStep').style.display = 'none';
   document.getElementById('registerSubmit').textContent = 'Create account';
